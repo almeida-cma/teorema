@@ -1,0 +1,2 @@
+# teorema
+Bissetriz
