@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação: Teorema da Bissetriz e o Problema de André</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --text: #f8fafc;
+            --accent: #38bdf8;
+            --highlight: #f43f5e;
+            --gold: #fbbf24;
+            --subtle: #94a3b8;
+            --card: rgba(255, 255, 255, 0.03);
+            --footer-bg: #020617;
+        }
+
+        * { box-sizing: border-box; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg); color: var(--text); overflow: hidden; }
+
+        .slide-deck { width: 100vw; height: 100vh; position: relative; }
+        
+        .slide { 
+            display: none; width: 100%; height: 100%; padding: 40px 60px 200px 60px; 
+            flex-direction: column; justify-content: center; align-items: center; text-align: center; 
+        }
+        .slide.active { display: flex; animation: slideUp 0.4s ease-out; }
+
+        h1 { font-size: 3rem; color: var(--accent); margin: 0 0 10px; letter-spacing: -1px; }
+        h2 { font-size: 1.6rem; color: var(--subtle); margin-bottom: 25px; font-weight: 400; }
+        
+        .content { display: flex; width: 100%; max-width: 1200px; background: var(--card); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 25px; align-items: center; justify-content: space-around; gap: 40px; }
+        
+        .svg-box { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); flex-shrink: 0; }
+        
+        .formula { background: rgba(244, 63, 94, 0.15); padding: 15px 30px; border-left: 6px solid var(--highlight); border-radius: 4px; font-size: 2rem; font-family: 'Cambria', serif; color: #fff; margin: 15px 0; }
+        
+        /* Rodapé de Explicação */
+        .explanation-box { 
+            position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 1100px; 
+            background: var(--footer-bg); 
+            padding: 18px 25px; 
+            border-radius: 12px; 
+            border: 2px solid var(--gold);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
+            text-align: left;
+            z-index: 10;
+        }
+        .explanation-box p { margin: 0; font-size: 1.2rem; line-height: 1.4; color: #f1f5f9; }
+        .explanation-box strong { color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-right: 10px; font-size: 0.9rem; }
+
+        .list { text-align: left; font-size: 1.2rem; line-height: 1.5; color: #cbd5e1; list-style: none; padding: 0; }
+        .list li { margin-bottom: 10px; }
+        .list li::before { content: "•"; color: var(--accent); font-weight: bold; margin-right: 15px; }
+
+        /* Controles movidos para o TOPO para não bater no rodapé */
+        .top-bar {
+            position: absolute; top: 20px; right: 20px;
+            display: flex; align-items: center; gap: 15px;
+            z-index: 100;
+        }
+
+        #indicator { 
+            color: var(--subtle); font-size: 0.9rem; font-weight: bold;
+            background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 6px; 
+        }
+        
+        .nav-buttons { display: flex; gap: 8px; }
+        
+        button { 
+            padding: 8px 16px; font-size: 0.8rem; cursor: pointer; border: none; border-radius: 4px; 
+            background: var(--accent); color: #020617; font-weight: bold; transition: 0.2s; 
+        }
+        button:hover { background: var(--gold); }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .lbl { font-size: 14px; font-weight: bold; fill: #1e293b; }
+        .ang { font-size: 11px; fill: #15803d; font-weight: bold; }
+        .frac { display: inline-block; vertical-align: middle; text-align: center; }
+        .frac span { display: block; padding: 0 5px; }
+        .frac span.top { border-bottom: 2px solid white; }
+    </style>
+</head>
+<body>
+
+<div class="slide-deck">
+
+    <!-- BARRA SUPERIOR DE CONTROLE -->
+    <div class="top-bar">
+        <div id="indicator">1 / 9</div>
+        <div class="nav-buttons">
+            <button onclick="changeSlide(-1)">ANTERIOR</button>
+            <button onclick="changeSlide(1)">PRÓXIMO</button>
+        </div>
+    </div>
+
+    <!-- SLIDE 1: CAPA -->
+    <div class="slide active">
+        <h1 style="font-size: 3.5rem;">Teorema da Bissetriz e o Problema de André</h1>
+        <h2 style="color: var(--accent); font-size: 2rem;">Análise de Aplicabilidade e Rigor Geométrico</h2>
+        
+        <div style="margin-top: 50px; padding: 25px; border-top: 2px solid var(--gold); min-width: 400px;">
+            <p style="font-size: 1.8rem; color: var(--gold); margin: 0;">Aluno: Cristiano Almeida</p>
+            <p style="color: var(--subtle); font-size: 1.1rem; margin-top: 8px;">Matemática Escolar I - Prof. Dr. Willian Cruz</p>
+        </div>
+
+        <div class="explanation-box">
+            <p><strong>Explicação:</strong> Sejam bem-vindos. Hoje vamos revisar o Teorema da Bissetriz e analisar, de forma crítica, por que ele não é a ferramenta adequada para resolver o Problema de André, um desafio que exige construções geométricas fundamentais sem o uso de trigonometria.</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 2: BISSETRIZ INTERNA -->
+    <div class="slide">
+        <h1>Teorema da Bissetriz Interna</h1>
+        <div class="content">
+            <div class="svg-box">
+                <svg width="350" height="250" viewBox="0 0 400 280">
+                    <path d="M80,240 L320,240 L180,40 Z" fill="none" stroke="#334" stroke-width="3"/>
+                    <line x1="180" y1="40" x2="210" y2="240" stroke="#f43f5e" stroke-width="4" stroke-dasharray="6"/>
+                    <text x="175" y="30" class="lbl">A</text><text x="60" y="255" class="lbl">B</text>
+                    <text x="205" y="265" class="lbl">D</text><text x="330" y="255" class="lbl">C</text>
+                </svg>
+            </div>
+            <div style="text-align: left;">
+                <div class="formula">
+                    <div class="frac"><span class="top">BD</span><span>DC</span></div> = 
+                    <div class="frac"><span class="top">AB</span><span>AC</span></div>
+                </div>
+                <p>Relação proporcional entre lados e base dividida.</p>
+            </div>
+        </div>
+        <div class="explanation-box">
+            <p><strong>Explicação:</strong> O Teorema da Bissetriz Interna estabelece que, se uma bissetriz divide um ângulo interno, ela divide o lado oposto em segmentos que guardam a mesma proporção que os lados adjacentes que formam o ângulo.</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 3: IDEIA DA DEMONSTRAÇÃO -->
+    <div class="slide">
+        <h1>Ideia da Demonstração</h1>
+        <div class="content">
+            <ul class="list">
+                <li>Bissetriz &rarr; Ângulos Congruentes.</li>
+                <li>Traçado de Reta Paralela Auxiliar.</li>
+                <li>Utilização do Teorema de Tales.</li>
+                <li>Identificação de Triângulo Isósceles Interno.</li>
+            </ul>
+            <div style="font-size: 5rem;">💡</div>
+        </div>
+        <div class="explanation-box">
+            <p><strong>Explicação:</strong> A prova clássica baseia-se em estender a figura para aplicar o Teorema de Tales. A igualdade de ângulos garantida pela bissetriz cria um triângulo isósceles auxiliar que permite a substituição de medidas na proporção.</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 4: BISSETRIZ EXTERNA -->
+    <div class="slide">
+        <h1>Teorema da Bissetriz Externa</h1>
+        <div class="content">
+            <div class="svg-box">
+                <svg width="380" height="250" viewBox="0 0 420 250">
+                    <path d="M60,180 L180,180 L140,60 Z" fill="none" stroke="#334" stroke-width="3"/>
+                    <line x1="180" y1="180" x2="380" y2="180" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4"/>
+                    <line x1="140" y1="60" x2="380" y2="180" stroke="#f43f5e" stroke-width="4"/>
+                    <text x="135" y="50" class="lbl">A</text><text x="50" y="200" class="lbl">B</text>
+                    <text x="175" y="200" class="lbl">C</text><text x="385" y="200" class="lbl" fill="#f43">E</text>
+                </svg>
+            </div>
+            <div style="text-align: left;">
+                <div class="formula">
+                    <div class="frac"><span class="top">BE</span><span>EC</span></div> = 
+                    <div class="frac"><span class="top">AB</span><span>AC</span></div>
+                </div>
+                <p>Proporcionalidade nos prolongamentos externos.</p>
+            </div>
+        </div>
+        <div class="explanation-box">
+            <p><strong>Explicação:</strong> A bissetriz externa também gera proporcionalidade. O ponto importante é notar que ambos os teoremas dependem exclusivamente da existência de uma linha que divide o ângulo exatamente ao meio.</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 5: O PROBLEMA DE ANDRÉ -->
+    <div class="slide">
+        <h1>O Problema de André</h1>
+        <div class="content">
+            <div class="svg-box">
+                <svg width="450" height="280" viewBox="-40 -20 440 280">
+                    <g transform="translate(0, 220) scale(40, -40)">
+                        <line x1="2" y1="6" x2="2.5" y2="2" stroke="#cbd" stroke-width="0.04"/>
+                        <line x1="0" y1="0" x2="2.5" y2="2" stroke="#cbd" stroke-width="0.04"/>
+                        <line x1="2" y1="6" x2="8" y2="-0.5" stroke="#cbd" stroke-width="0.04"/>
+                        <line x1="0" y1="0" x2="8" y2="-0.5" stroke="#cbd" stroke-width="0.04"/>
+                        <line x1="0" y1="0" x2="2" y2="6" stroke="#000" stroke-width="0.22"/>
+                        <line x1="8" y1="-0.5" x2="2.5" y2="2" stroke="#000" stroke-width="0.22"/>
+                        <circle cx="0" cy="0" r="0.12" fill="black"/><circle cx="2" cy="6" r="0.12" fill="black"/><circle cx="2.5" cy="2" r="0.12" fill="black"/><circle cx="8" cy="-0.5" r="0.12" fill="black"/>
+                    </g>
+                    <text x="-15" y="230" class="lbl">A</text><text x="80" y="15" class="lbl">B</text><text x="115" y="155" class="lbl">D</text><text x="330" y="245" class="lbl">C</text>
+                    <text x="75" y="55" class="ang">30°</text><text x="25" y="200" class="ang">45°</text><text x="125" y="175" class="ang">135°</text><text x="290" y="215" class="ang" fill="#f43" font-size="20">x</text>
+                </svg>
+            </div>
+            <ul class="list">
+                <li>Dato: <strong>AB = CD</strong></li>
+                <li>Ângulos: 30°, 45°, 135°</li>
+                <li>Dúvida: Qual o valor de x?</li>
+            </ul>
+        </div>
+        <div class="explanation-box">
+            <p><strong>Explicação:</strong> No Problema de André, temos uma igualdade absoluta de segmentos (AB=CD) em locais diferentes da figura. Não há nenhuma indicação de que as linhas desenhadas sejam bissetrizes de qualquer ângulo.</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 6: POR QUE NÃO SE APLICA? -->
+    <div class="slide">
+        <h1>Por que a Bissetriz não se aplica?</h1>
+        <div class="content" style="flex-direction: column; gap: 15px;">
+            <div style="display: flex; gap: 30px;">
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; width: 420px; border-left: 5px solid var(--accent);">
+                    <h3 style="color: var(--accent); margin-top: 0;">Requisitos</h3>
+                    <p>Ângulo bissetado (dividido ao meio) e ponto de divisão no lado oposto.</p>
+                </div>
+                <div style="background: rgba(244, 63, 94, 0.1); padding: 20px; border-radius: 12px; width: 420px; border: 1px solid var(--highlight);">
+                    <h3 style="color: var(--highlight); margin-top: 0;">O Cenário</h3>
+                    <p>Não há bissetriz. A relação AB=CD é uma igualdade, não uma divisão proporcional angular.</p>
+                </div>
+            </div>
+            <p style="font-size: 1.4rem; color: var(--highlight); font-weight: bold;">Incompatibilidade de Hipóteses.</p>
+        </div>
+        <div class="explanation-box">
+            <p><strong>Explicação:</strong> Para usar o teorema, primeiro precisamos da bissecção angular. Tentar forçar este teorema sem cumprir suas hipóteses é um erro conceitual; o problema é resolvido através de simetrias e não de razões métricas angulares.</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 7: INTERPRETAÇÃO CONCEITUAL -->
+    <div class="slide">
+        <h1>Interpretação Conceitual</h1>
+        <div class="content">
+            <div style="text-align: center; flex: 1;">
+                <h2 style="color: var(--accent);">Bissetriz</h2>
+                <div class="formula" style="border-left-color: var(--accent);">Ângulo &rarr; Proporção</div>
+            </div>
+            <div style="font-size: 4rem; margin: 0 40px;">🔄</div>
+            <div style="text-align: center; flex: 1;">
+                <h2 style="color: var(--highlight);">Problema de André</h2>
+                <div class="formula">Igualdade &rarr; Ângulo</div>
+            </div>
+        </div>
+        <div class="explanation-box">
+            <p><strong>Explicação:</strong> A inversão é clara: o teorema da bissetriz usa o ângulo para deduzir lados (proporção). O Problema de André nos dá os lados (congruência) e pede o ângulo. São domínios de resolução opostos.</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 8: ESTRATÉGIA ADEQUADA -->
+    <div class="slide">
+        <h1>Estratégia Mais Adequada</h1>
+        <div class="content">
+            <ul class="list">
+                <li>Exploração de triângulos isósceles.</li>
+                <li>Lei da soma dos ângulos ($180^\circ$).</li>
+                <li>Traçado de alturas (Simetria).</li>
+                <li>Criação de triângulos auxiliares notáveis.</li>
+            </ul>
+            <div style="font-size: 5rem;">🛠️</div>
+        </div>
+        <div class="explanation-box">
+            <p><strong>Explicação:</strong> O caminho produtivo envolve o traçado de alturas auxiliares que aproveitem a igualdade AB=CD, permitindo provar paralelismo e o valor de x por propriedades de triângulos isósceles e ângulos externos.</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 9: CONCLUSÃO -->
+    <div class="slide">
+        <h1>Conclusão</h1>
+        <div class="formula" style="font-size: 2rem; border-left-color: var(--accent);">
+            "Nem todo teorema se aplica a todo problema."
+        </div>
+        <p style="font-size: 1.4rem; color: var(--subtle); margin-top: 25px;">O rigor geométrico exige discernimento e análise de dados.</p>
+        <div class="explanation-box">
+            <p><strong>Explicação:</strong> O rigor matemático não está em aplicar fórmulas mecanicamente, mas em analisar se o cenário permite o uso daquela ferramenta. Reconhecer as limitações é o que define um bom pensamento geométrico.</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const indicator = document.getElementById("indicator");
+
+    function updateIndicator() {
+        indicator.innerText = (currentSlide + 1) + " / " + slides.length;
+    }
+
+    function changeSlide(direction) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + direction + slides.length) % slides.length;
+        slides[currentSlide].classList.add('active');
+        updateIndicator();
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+        if (e.key === "ArrowLeft") changeSlide(-1);
+    });
+
+    updateIndicator();
+</script>
+
+</body>
+</html>
